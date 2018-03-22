@@ -43,9 +43,9 @@ export const login = (username, password, history) => {
     axios
       .post(`${ROOT_URL}/login`, { username, password })
       .then((response) => {
+        localStorage.setItem( 'token', response.data.token)
         dispatch({
           type: USER_AUTHENTICATED,
-          payload: localStorage.setItem( 'token', response)
         });
         history.push('/users');
       })
@@ -60,10 +60,10 @@ export const logout = () => {
 }
 
 export const getUsers = () => {
-  localStorage.getItem('token');
+  const token = localStorage.getItem('token');
   return dispatch => {
     axios
-      .get(`${ROOT_URL}/users`, { headers: { authorization: 'token' }})// look at axios doc for how to send Auth header : token
+      .get(`${ROOT_URL}/users`, { headers: { "Authorization": token }})// look at axios doc for how to send Auth header : token
       .then(response => {
         dispatch({
           type: GET_USERS,
